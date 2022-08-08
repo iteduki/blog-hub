@@ -1,9 +1,36 @@
 import type { NextPage } from 'next'
+import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const Home: NextPage = () => {
+import type { FeedItem } from '@/utils/parser'
+import { parseRss } from '@/utils/parser'
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const response = await Promise.allSettled([
+    parseRss('https://www.reddit.com/.rss'),
+    parseRss('https://www.reddit.com/.rss'),
+  ])
+
+  const feedItems = response.reduce<FeedItem[]>((prev, cur) => {
+    if (cur.status === 'rejected') return prev
+    return [...prev, cur.value]
+  }, [])
+
+  return {
+    props: {
+      feedItems,
+    },
+  }
+}
+
+type HomeProps = {
+  feedItems: FeedItem[]
+}
+
+const Home: NextPage<HomeProps> = ({ feedItems }) => {
+  console.log({ feedItems })
   return (
     <div>
       <Head>
