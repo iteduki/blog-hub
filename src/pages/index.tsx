@@ -1,7 +1,18 @@
 import type { NextPage } from 'next'
+import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import { parseRss } from '@/utils/parser'
+
+export const getStaticProps: GetStaticProps = async () => {
+  const hoge = await parseRss('https://www.reddit.com/.rss')
+  console.log({ hoge })
+  return {
+    props: {},
+  }
+}
 
 const Home: NextPage = () => {
   return (
