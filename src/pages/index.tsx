@@ -4,17 +4,33 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import type { FeedItem } from '@/utils/parser'
 import { parseRss } from '@/utils/parser'
 
-export const getStaticProps: GetStaticProps = async () => {
-  const hoge = await parseRss('https://www.reddit.com/.rss')
-  console.log({ hoge })
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const response = await Promise.allSettled([
+    parseRss('https://www.reddit.com/.rss'),
+    parseRss('https://www.reddit.com/.rss'),
+  ])
+
+  const feedItems = response.reduce<FeedItem[]>((prev, cur) => {
+    if (cur.status === 'rejected') return prev
+    return [...prev, cur.value]
+  }, [])
+
   return {
-    props: {},
+    props: {
+      feedItems,
+    },
   }
 }
 
-const Home: NextPage = () => {
+type HomeProps = {
+  feedItems: FeedItem[]
+}
+
+const Home: NextPage<HomeProps> = ({ feedItems }) => {
+  console.log({ feedItems })
   return (
     <div>
       <Head>

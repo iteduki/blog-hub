@@ -3,6 +3,8 @@ import Parser from 'rss-parser'
 
 const parser = new Parser()
 
-export const parseRss = async (url: string): Promise<Output<Record<string, string>>> => {
+export type FeedItem = Output<Record<string, string>>
+
+export const parseRss = async (url: string): Promise<FeedItem> => {
   return await parser.parseURL(url)
 }
