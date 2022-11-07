@@ -1,8 +1,8 @@
-# Next.js Template Repository
-- Next.js
-- eslint
-- prettier
-- husky
-- jest
-- react-testing-library
-- renovate bot
+# Usage
+
+## インストール
+- `yarn`
+
+## 開始
+- `yarn dev`
+- http://localhost:3000/ へアクセス
