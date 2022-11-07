@@ -3,13 +3,11 @@ import type { GetStaticProps } from 'next'
 
 import type { CardProps } from '@/components/Card'
 import { Card } from '@/components/Card'
+import { feedUrls } from '@/constants/feedUrls'
 import { parseRss } from '@/utils/parser'
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const response = await Promise.allSettled([
-    parseRss('https://www.reddit.com/.rss'),
-    parseRss('https://www.reddit.com/.rss'),
-  ])
+  const response = await Promise.allSettled(feedUrls.map(parseRss))
 
   const cardProps = response
     .reduce<CardProps[]>((prev, cur) => {
