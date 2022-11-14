@@ -3,6 +3,7 @@ import type { GetStaticProps } from 'next'
 
 import type { CardProps } from '@/components/Card'
 import { Card } from '@/components/Card'
+import { Head } from '@/components/Head'
 import { feedUrls } from '@/constants/feedUrls'
 import { parseRss } from '@/utils/parser'
 
@@ -43,6 +44,7 @@ type HomeProps = {
 const Home: NextPage<HomeProps> = ({ cardProps }) => {
   return (
     <>
+      <Head />
       {cardProps.map((props, index) => {
         return <Card {...props} key={index} />
       })}
