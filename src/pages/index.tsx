@@ -1,8 +1,7 @@
 import type { NextPage } from 'next'
 import type { GetStaticProps } from 'next'
 
-import type { CardProps } from '@/components/Card'
-import { Card } from '@/components/Card'
+import { type CardsProps, Cards } from '@/components/Cards'
 import { Head } from '@/components/Head'
 import { feedUrls } from '@/constants/feedUrls'
 import { parseRss } from '@/utils/parser'
@@ -11,7 +10,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const response = await Promise.allSettled(feedUrls.map(parseRss))
 
   const cardProps = response
-    .reduce<CardProps[]>((prev, cur) => {
+    .reduce<CardsProps['cardProps']>((prev, cur) => {
       if (cur.status === 'rejected') return prev
       const { title = 'No Title', items, link } = cur.value
       return [
@@ -32,22 +31,23 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     })
   return {
     props: {
-      cardProps,
+      cardsProps: cardProps,
     },
   }
 }
 
 type HomeProps = {
-  cardProps: CardProps[]
+  cardsProps: CardsProps['cardProps']
 }
 
-const Home: NextPage<HomeProps> = ({ cardProps }) => {
+const Home: NextPage<HomeProps> = ({ cardsProps }) => {
   return (
     <>
       <Head />
-      {cardProps.map((props, index) => {
+      <Cards cardProps={cardsProps} />
+      {/* {cardsProps.map((props, index) => {
         return <Card {...props} key={index} />
-      })}
+      })} */}
     </>
   )
 }
